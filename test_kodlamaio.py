@@ -11,7 +11,7 @@ class Test_Kodlamaio:
         driver = webdriver.Chrome()
         driver.get("https://www.kodlama.io/")
         loginBtnXPath = "//*[@id='navbar']/div/div/div/ul/li[3]/a"
-        WebDriverWait(driver,5).until(expected_conditions.visibility_of_element_located(By.XPATH,loginBtnXPath)) # defansif kodlama
+        WebDriverWait(driver,5).until(expected_conditions.visibility_of_element_located((By.XPATH,loginBtnXPath))) # defansif kodlama
         loginBtn = driver.find_element(By.XPATH,loginBtnXPath)
         loginBtnText = loginBtn.text
         assert loginBtnText == "Giriş Yap"
