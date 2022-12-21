@@ -4,13 +4,21 @@ from selenium.webdriver.common.by import By
 from time import sleep
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions
 
 driver = webdriver.Chrome()
 driver.get("https://www.kodlama.io/")
 driver.maximize_window() # -> ekranı tam boyutuna getirir
-
-loginBtn = driver.find_element(By.XPATH,"//*[@id='navbar']/div/div/div/ul/li[3]/a")
 ## loginBtn texti "Giriş Yap" olmalıdır..
+
+# sitenin ya da elementin yüklenmesi beklenmeli..
+# WebDriverWait => condition bazlı çalışır
+# loginBtn görünür olana kadar maximum 5 saniye bekle..
+# => condition maximum kaç saniye bekletilsin
+loginBtnFinder = (By.XPATH,"//*[@id='navbar']/div/div/div/ul/li[3]/a") #neye göre locate olacağım
+WebDriverWait(driver,5).until(expected_conditions.visibility_of_element_located(loginBtnFinder)) # defansif kodlama
+loginBtn = driver.find_element(loginBtnFinder)
 loginBtnText = loginBtn.text
 
 #windows + .
@@ -54,3 +62,11 @@ actions.perform() # => zincirlenen aksiyonları işleme koyar..
 # sonuçlar console'a yazdırılacak
 # ekran görüntüsü günün tarihi ile kaydedilecek.
 # date.today()
+
+# WebDriverWait classı 🟩
+# pytest => 
+# pytest dosyaları "test_" prefixi (ön ek) ile başlar. 
+# pytest classları "Test_" prefixi ile başlar.
+# pytest fonksiyonlar "test_" prefixi ile başlar.
+# constants
+
