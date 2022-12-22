@@ -32,5 +32,4 @@ class TestLogin():
     self.driver.find_element(By.CSS_SELECTOR, "*[data-test=\"login-button\"]").click()
     WebDriverWait(self.driver, 5).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, "#item_4_title_link > .inventory_item_name")))
     elements = self.driver.find_elements(By.CSS_SELECTOR, "#item_4_title_link > .inventory_item_name")
-    assert len(elements) > 0
-  
+    assert len(elements) > 0 
