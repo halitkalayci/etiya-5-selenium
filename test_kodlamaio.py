@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
 from pathlib import Path
 from constants import *
+import pytest
 class Test_Kodlamaio:
     # setup_method => pytest'te her test öncesi çalıştırılan metot
     # driver oluşturma
@@ -35,8 +36,9 @@ class Test_Kodlamaio:
         #constant => SABİT değişkenler. Pİ sayısı
         assert loginBtnText == LOGIN_TEXT
 
+    @pytest.mark.skip # ilgili testin testler koşulurken es geçilmesini sağlar.
     def test_register(self):
         self.driver.get(BASE_DOMAIN_URL)
         assert "Giriş Yap" == LOGIN_TEXT
-
+#annotation-decorator
 

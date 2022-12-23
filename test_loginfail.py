@@ -9,7 +9,7 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-
+import openpyxl
 class TestLoginfail():
   def setup_method(self, method):
     self.driver = webdriver.Chrome()
@@ -18,15 +18,39 @@ class TestLoginfail():
   def teardown_method(self, method):
     self.driver.quit()
   
-  def test_loginfail(self):
-    self.driver.get("https://www.saucedemo.com/")
+
+  #exceli oku
+  #verileri çıkart
+  #testte kullan
+
+  def readUserDataFromExcel():
+      #exceli aç
+      #hücreleri oku
+      #okuduğun tüm verileri bir listeye at
+      #listeyi return et
+      excelFile = openpyxl.load_workbook("data/userFailData.xlsx")
+      selectedSheet = excelFile["Sheet1"]
+
+      rows = selectedSheet.max_row
+      data = []
+      for i in range(2,rows+1): # şu satırdan başla, tüm satırları oku
+        username = selectedSheet.cell(i,1).value # sayfadaki i,1'e denk gelen hücreyi bul
+        password = selectedSheet.cell(i,2).value
+        tupleExample = (username,password)
+        data.append(tupleExample)
+      return data
+
+
+  @pytest.mark.parametrize("username,password",readUserDataFromExcel())
+  def test_loginfail(self,username,password):
+    self.driver.get("https://www.saucedemo.com/") #magic string => "" => constants
     self.driver.set_window_size(1101, 816)
     WebDriverWait(self.driver, 5).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, "*[data-test=\"username\"]")))
     self.driver.find_element(By.CSS_SELECTOR, "*[data-test=\"username\"]").click()
-    self.driver.find_element(By.CSS_SELECTOR, "*[data-test=\"username\"]").send_keys("standard_user1")
+    self.driver.find_element(By.CSS_SELECTOR, "*[data-test=\"username\"]").send_keys(username)
     WebDriverWait(self.driver, 5).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, "*[data-test=\"password\"]")))
     self.driver.find_element(By.CSS_SELECTOR, "*[data-test=\"password\"]").click()
-    self.driver.find_element(By.CSS_SELECTOR, "*[data-test=\"password\"]").send_keys("1")
+    self.driver.find_element(By.CSS_SELECTOR, "*[data-test=\"password\"]").send_keys(password)
     WebDriverWait(self.driver, 5).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, "*[data-test=\"login-button\"]")))
     self.driver.find_element(By.CSS_SELECTOR, "*[data-test=\"login-button\"]").click()
     assert self.driver.find_element(By.CSS_SELECTOR, "*[data-test=\"error\"]").text == "Epic sadface: Username and password do not match any user in this service"
